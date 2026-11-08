@@ -1,0 +1,19 @@
+<p class="muted">Hiring workspace</p>
+<h1>Candidates</h1>
+<p><%= link_to "Add candidate", new_candidate_path, class: "button" %> <%= link_to "Dashboard", root_path, class: "button secondary" %></p>
+
+<h2>Managed by you</h2>
+<% if @managed_candidates.empty? %><p class="muted">No managed candidates.</p><% end %>
+<div class="grid">
+  <% @managed_candidates.each do |candidate| %>
+    <article class="candidate-card"><h3><%= link_to candidate.name, candidate_path(name: candidate.name) %></h3><p class="muted"><%= candidate.role %></p></article>
+  <% end %>
+</div>
+
+<h2>Assigned to you</h2>
+<% if @assigned_candidates.empty? %><p class="muted">No assigned candidates.</p><% end %>
+<div class="grid">
+  <% @assigned_candidates.each do |candidate| %>
+    <article class="candidate-card"><h3><%= link_to candidate.name, candidate_path(name: candidate.name) %></h3><p class="muted"><%= candidate.role %> · Hiring manager: <%= candidate.hiring_manager %></p></article>
+  <% end %>
+</div>

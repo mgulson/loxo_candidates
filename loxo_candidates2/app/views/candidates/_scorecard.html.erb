@@ -1,0 +1,9 @@
+<div class="score">
+  <dl>
+    <div><dt>Technical skill</dt><dd><%= scorecard.technical_skill.presence || "—" %></dd></div>
+    <div><dt>Communication</dt><dd><%= scorecard.communication.presence || "—" %></dd></div>
+    <div><dt>Collaboration</dt><dd><%= scorecard.collaboration.presence || "—" %></dd></div>
+    <div><dt>Role fit</dt><dd><%= scorecard.role_fit.presence || "—" %></dd></div>
+  </dl>
+  <% if scorecard.notes.present? %><p><strong>Notes</strong><br><%= simple_format(scorecard.notes) %></p><% end %>
+</div>

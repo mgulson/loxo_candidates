@@ -1,0 +1,47 @@
+<p class="muted"><%= @candidate.role %> · Hiring manager: <%= @candidate.hiring_manager %></p>
+<h1><%= @candidate.name %></h1>
+<p><%= link_to "All candidates", candidates_path, class: "button secondary" %></p>
+
+<% if @is_manager %>
+  <section class="panel">
+    <h2 style="margin-top: 0">Assign a reviewer</h2>
+    <% if @assignable_users.empty? %>
+      <p class="muted">Everyone in the users list is already assigned.</p>
+    <% else %>
+      <%= form_with url: assignments_candidate_path(name: @candidate.name), method: :post do |form| %>
+        <%= form.select :user_name, @assignable_users.map { |user| ["#{user.name} · #{user.role}", user.name] } %>
+        <%= form.submit "Assign reviewer", class: "button" %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <h2>Scorecards by reviewer</h2>
+  <% if @scorecards.empty? %><p class="muted">No reviewers assigned yet.</p><% end %>
+  <% @scorecards.group_by(&:user_name).each do |author, cards| %>
+    <section class="panel">
+      <h3><%= author %></h3>
+      <% cards.each do |scorecard| %>
+        <% if scorecard.submitted.present? %>
+          <%= render "scorecard", scorecard: scorecard, show_author: false %>
+        <% else %>
+          <p class="muted">Scorecard not submitted yet.</p>
+        <% end %>
+      <% end %>
+    </section>
+  <% end %>
+<% else %>
+  <% if @my_scorecard.submitted.present? %>
+    <section class="panel"><h2 style="margin-top: 0">Your scorecard</h2><p class="muted">Submitted <%= @my_scorecard.submitted %></p><%= render "scorecard", scorecard: @my_scorecard, show_author: false %></section>
+    <h2>Team scorecards</h2>
+    <% @submitted_scorecards.reject { |scorecard| scorecard.user_name == current_user.name }.each do |scorecard| %>
+      <section class="panel"><p class="muted">Reviewer · anonymous</p><%= render "scorecard", scorecard: scorecard, show_author: false %></section>
+    <% end %>
+    <% if @submitted_scorecards.size <= 1 %><p class="muted">No other scorecards have been submitted yet.</p><% end %>
+  <% else %>
+    <section class="panel">
+      <h2 style="margin-top: 0">Your review is pending</h2>
+      <p class="muted">Submit your scorecard to see the other reviewers’ anonymized feedback.</p>
+      <%= link_to "Submit scorecard", new_candidate_scorecard_path(candidate_name: @candidate.name), class: "button" %>
+    </section>
+  <% end %>
+<% end %>

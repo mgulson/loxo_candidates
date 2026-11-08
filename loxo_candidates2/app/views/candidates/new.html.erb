@@ -1,0 +1,13 @@
+<p class="muted">New candidate · Hiring manager: <%= current_user.name %></p>
+<h1>Add a candidate</h1>
+<p class="muted">The current user will be saved as this candidate’s hiring manager.</p>
+<section class="panel">
+  <% if @candidate.errors.any? %><div class="flash alert"><%= @candidate.errors.full_messages.to_sentence %></div><% end %>
+  <%= form_with model: @candidate do |form| %>
+    <%= form.label :name, "Candidate name", class: "field" %>
+    <%= form.text_field :name, required: true, autofocus: true %>
+    <%= form.label :role, "Role", class: "field" %>
+    <%= form.text_field :role, required: true %>
+    <p><%= form.submit "Create candidate", class: "button" %> <%= link_to "Cancel", candidates_path, class: "button secondary" %></p>
+  <% end %>
+</section>
